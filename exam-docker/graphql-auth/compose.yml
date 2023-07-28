@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PASSWORD}
+      MYSQL_DATABASE: ${BDD}
+    healthcheck: 
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  api:
+    build:
+      context: .
+      dockerfile: DockerfileDev
+    volumes:
+      - ./api:/app
+    ports:
+      -3000:${PORT}
+  docker-exam:
+    image: docker-exam
+    ports:
+      - "3000:${PORT}" 
+
